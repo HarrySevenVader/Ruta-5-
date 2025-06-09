@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'simulated_payment_view.dart'; // Asegúrate de importar esta vista
 
 class OrderModeView extends StatefulWidget {
   const OrderModeView({super.key});
@@ -15,24 +16,9 @@ class _OrderModeViewState extends State<OrderModeView> {
 
   void _submit() {
     if (_formKey.currentState!.validate()) {
-      String mensaje =
-          _orderMode == 'mesa'
-              ? 'Pedido en mesa: N° ${_mesaController.text}'
-              : 'Pedido para llevar a: ${_direccionController.text}';
-
-      showDialog(
-        context: context,
-        builder:
-            (_) => AlertDialog(
-              title: const Text('Pedido confirmado'),
-              content: Text(mensaje),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: const Text('Aceptar'),
-                ),
-              ],
-            ),
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const SimulatedPaymentView()),
       );
     }
   }
