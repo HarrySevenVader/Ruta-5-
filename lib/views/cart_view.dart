@@ -63,7 +63,7 @@ class CartScreen extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               Text(
-                'Total: S/ ${item.totalPrice.toStringAsFixed(2)}',
+                'Total: CLP ${item.totalPrice.toStringAsFixed(2)}',
                 style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -131,7 +131,7 @@ class CartScreen extends StatelessWidget {
                         'Tamaño: ${item.size ?? 'Normal'}\nToppings: ${item.toppings.isNotEmpty ? item.toppings.join(', ') : 'Ninguno'}',
                       ),
                       trailing: Text(
-                        'S/ ${item.totalPrice.toStringAsFixed(2)}',
+                        'CLP ${item.totalPrice.toStringAsFixed(2)}',
                         style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ),
@@ -166,7 +166,7 @@ class CartScreen extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          'S/ ${totalCartPrice.toStringAsFixed(2)}',
+                          'CLP ${totalCartPrice.toStringAsFixed(2)}',
                           style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,

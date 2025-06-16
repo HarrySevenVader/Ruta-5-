@@ -24,19 +24,19 @@ class CartItem {
     for (final t in toppings) {
       switch (t) {
         case 'Queso extra':
-          toppingsCost += 1.5;
+          toppingsCost += 1500;
           break;
         case 'Tocino':
-          toppingsCost += 2.0;
+          toppingsCost += 2000;
           break;
         case 'Champiñones':
-          toppingsCost += 1.0;
+          toppingsCost += 1000;
           break;
         case 'Palta':
-          toppingsCost += 1.5;
+          toppingsCost += 1500;
           break;
         case 'Huevo frito':
-          toppingsCost += 1.0;
+          toppingsCost += 2000;
           break;
       }
     }

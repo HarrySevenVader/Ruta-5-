@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
 import 'product_detail_view.dart';
 import 'cart_view.dart';
-import '../models/product.dart'; // <-- Importa el modelo Product
-import '../models/cart_model.dart'; // <-- Para el acceso al carrito si lo necesitas
+import '../models/product.dart';
+import '../models/cart_model.dart';
 
-// Lista de productos (simulada)
+// Lista de productos (precios en pesos chilenos CLP)
 final List<Product> products = [
   Product(
     name: 'Empanada',
     category: 'Entradas',
     ingredients: ['carne', 'cebolla'],
-    price: 5.0,
+    price: 1800,
     imagePath: 'assets/empanada.png',
   ),
   Product(
     name: 'Papas Fritas',
     category: 'Entradas',
     ingredients: ['papas', 'aceite', 'sal'],
-    price: 4.5,
+    price: 2500,
     imagePath: 'assets/papas-fritas.png',
     isAvailable: false,
   ),
@@ -25,42 +25,42 @@ final List<Product> products = [
     name: 'Lomo Saltado',
     category: 'Platos Fuertes',
     ingredients: ['carne', 'papas', 'arroz'],
-    price: 12.0,
+    price: 8500,
     imagePath: 'assets/lomo-saltado.png',
   ),
   Product(
     name: 'Hamburguesa',
     category: 'Platos Fuertes',
     ingredients: ['carne', 'pan', 'queso', 'lechuga'],
-    price: 9.5,
+    price: 5200,
     imagePath: 'assets/hamburguesa.png',
   ),
   Product(
     name: 'Inca Kola',
     category: 'Bebidas',
     ingredients: ['gaseosa'],
-    price: 2.0,
+    price: 1800,
     imagePath: 'assets/inca_kola.png',
   ),
   Product(
     name: 'Jugo Natural',
     category: 'Bebidas',
     ingredients: ['naranja', 'agua'],
-    price: 3.0,
+    price: 2200,
     imagePath: 'assets/jugo.png',
   ),
   Product(
     name: 'Donas',
     category: 'Postres',
     ingredients: ['harina', 'azúcar', 'glaseado'],
-    price: 3.5,
+    price: 1500,
     imagePath: 'assets/donas.png',
   ),
   Product(
     name: 'Queque de Vainilla',
     category: 'Postres',
     ingredients: ['harina', 'vainilla', 'huevo'],
-    price: 4.0,
+    price: 1800,
     imagePath: 'assets/queque.png',
     isAvailable: false,
   ),
@@ -276,7 +276,7 @@ class ProductList extends StatelessWidget {
                     ),
                   ),
                   subtitle: Text(
-                    '${p.ingredients.join(', ')}\nS/ ${p.price.toStringAsFixed(2)}',
+                    '${p.ingredients.join(', ')}\n\$${p.price.toStringAsFixed(0)} CLP',
                     style: const TextStyle(color: Colors.white70),
                   ),
                   isThreeLine: true,
@@ -284,33 +284,21 @@ class ProductList extends StatelessWidget {
                       p.isAvailable
                           ? const Icon(
                             Icons.arrow_forward_ios,
-                            color: Colors.white54,
-                            size: 20,
+                            color: Colors.white,
                           )
                           : null,
                 ),
                 if (!p.isAvailable)
-                  Positioned(
-                    top: 0,
-                    right: 0,
+                  Positioned.fill(
                     child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 4,
-                      ),
-                      decoration: const BoxDecoration(
-                        color: Colors.red,
-                        borderRadius: BorderRadius.only(
-                          topRight: Radius.circular(12),
-                          bottomLeft: Radius.circular(12),
-                        ),
-                      ),
+                      color: Colors.black.withOpacity(0.3),
+                      alignment: Alignment.center,
                       child: const Text(
-                        'AGOTADO',
+                        'No disponible',
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 12,
                           fontWeight: FontWeight.bold,
+                          fontSize: 18,
                         ),
                       ),
                     ),
@@ -320,7 +308,7 @@ class ProductList extends StatelessWidget {
           ),
         );
       },
-      separatorBuilder: (_, __) => const SizedBox(height: 8),
+      separatorBuilder: (context, index) => const SizedBox(height: 12),
     );
   }
 }
@@ -412,11 +400,11 @@ class _PriceFilterSheetState extends State<PriceFilterSheet> {
             RangeSlider(
               values: RangeValues(_min, _max),
               min: 0,
-              max: 50,
+              max: 20000,
               divisions: 50,
               labels: RangeLabels(
-                'S/ ${_min.toStringAsFixed(1)}',
-                'S/ ${_max.toStringAsFixed(1)}',
+                'CLP ${_min.toStringAsFixed(1)}',
+                'CLP ${_max.toStringAsFixed(1)}',
               ),
               onChanged:
                   (values) => setState(() {

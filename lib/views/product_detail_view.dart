@@ -17,11 +17,11 @@ class _ProductDetailViewState extends State<ProductDetailView> {
   String? selectedSize;
   final Map<String, bool> selectedToppings = {};
   final Map<String, double> toppingPrices = {
-    'Queso extra': 1.5,
-    'Tocino': 2.0,
-    'Champiñones': 1.0,
-    'Palta': 1.5,
-    'Huevo frito': 1.0,
+    'Queso extra': 1500,
+    'Tocino': 2000,
+    'Champiñones': 1000,
+    'Palta': 1500,
+    'Huevo frito': 2000,
   };
 
   double get totalPrice {
@@ -129,7 +129,7 @@ class _ProductDetailViewState extends State<ProductDetailView> {
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               child: Text(
-                                'S/ ${widget.product.price.toStringAsFixed(2)}',
+                                'CLP ${widget.product.price.toStringAsFixed(2)}',
                                 style: const TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
@@ -271,7 +271,7 @@ class _ProductDetailViewState extends State<ProductDetailView> {
                                 return CheckboxListTile(
                                   title: Text(entry.key),
                                   subtitle: Text(
-                                    '+ S/ ${entry.value.toStringAsFixed(2)}',
+                                    '+ CLP ${entry.value.toStringAsFixed(2)}',
                                   ),
                                   value: selectedToppings[entry.key] ?? false,
                                   onChanged: (value) {
@@ -341,7 +341,7 @@ class _ProductDetailViewState extends State<ProductDetailView> {
                               },
                               icon: const Icon(Icons.shopping_cart),
                               label: Text(
-                                'Agregar al carrito - S/ ${totalPrice.toStringAsFixed(2)}',
+                                'Agregar al carrito - CLP ${totalPrice.toStringAsFixed(2)}',
                               ),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: const Color(0xFF14532D),
