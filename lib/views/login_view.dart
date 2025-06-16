@@ -16,6 +16,7 @@ class _LoginViewState extends State<LoginView> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _isLoading = false;
+  bool _obscurePassword = true;
 
   Future<void> _signInWithEmailPassword() async {
     if (!_formKey.currentState!.validate()) return;
@@ -140,6 +141,7 @@ class _LoginViewState extends State<LoginView> {
                   const SizedBox(height: 32),
                   TextFormField(
                     controller: _emailController,
+                    style: const TextStyle(color: Colors.white),
                     decoration: _inputDecoration("Correo electrónico"),
                     keyboardType: TextInputType.emailAddress,
                     validator:
@@ -151,11 +153,21 @@ class _LoginViewState extends State<LoginView> {
                   const SizedBox(height: 16),
                   TextFormField(
                     controller: _passwordController,
-                    obscureText: true,
+                    obscureText: _obscurePassword,
+                    style: const TextStyle(color: Colors.white),
                     decoration: _inputDecoration("Contraseña").copyWith(
-                      suffixIcon: const Icon(
-                        Icons.visibility_off,
-                        color: Colors.white,
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _obscurePassword
+                              ? Icons.visibility_off
+                              : Icons.visibility,
+                          color: Colors.white,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _obscurePassword = !_obscurePassword;
+                          });
+                        },
                       ),
                     ),
                     validator:
