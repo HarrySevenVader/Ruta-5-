@@ -5,6 +5,7 @@ class Product {
   final double price;
   final String imagePath;
   final bool isAvailable;
+  int stock;
 
   Product({
     required this.name,
@@ -13,5 +14,6 @@ class Product {
     required this.price,
     required this.imagePath,
     this.isAvailable = true,
-  });
+    int? stock,
+  }) : stock = stock ?? 15;
 }

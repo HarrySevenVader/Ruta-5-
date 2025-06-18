@@ -12,6 +12,7 @@ final List<Product> products = [
     ingredients: ['carne', 'cebolla'],
     price: 1800,
     imagePath: 'assets/empanada.png',
+    stock: 12,
   ),
   Product(
     name: 'Papas Fritas',
@@ -20,6 +21,7 @@ final List<Product> products = [
     price: 2500,
     imagePath: 'assets/papas-fritas.png',
     isAvailable: false,
+    stock: 0,
   ),
   Product(
     name: 'Lomo Saltado',
@@ -27,6 +29,7 @@ final List<Product> products = [
     ingredients: ['carne', 'papas', 'arroz'],
     price: 8500,
     imagePath: 'assets/lomo-saltado.png',
+    stock: 8,
   ),
   Product(
     name: 'Hamburguesa',
@@ -34,6 +37,7 @@ final List<Product> products = [
     ingredients: ['carne', 'pan', 'queso', 'lechuga'],
     price: 5200,
     imagePath: 'assets/hamburguesa.png',
+    stock: 12,
   ),
   Product(
     name: 'Inca Kola',
@@ -41,6 +45,7 @@ final List<Product> products = [
     ingredients: ['gaseosa'],
     price: 1800,
     imagePath: 'assets/inca_kola.png',
+    stock: 14,
   ),
   Product(
     name: 'Jugo Natural',
@@ -48,6 +53,7 @@ final List<Product> products = [
     ingredients: ['naranja', 'agua'],
     price: 2200,
     imagePath: 'assets/jugo.png',
+    stock: 12,
   ),
   Product(
     name: 'Donas',
@@ -55,6 +61,7 @@ final List<Product> products = [
     ingredients: ['harina', 'azúcar', 'glaseado'],
     price: 1500,
     imagePath: 'assets/donas.png',
+    stock: 10,
   ),
   Product(
     name: 'Queque de Vainilla',
@@ -63,6 +70,7 @@ final List<Product> products = [
     price: 1800,
     imagePath: 'assets/queque.png',
     isAvailable: false,
+    stock: 0,
   ),
 ];
 

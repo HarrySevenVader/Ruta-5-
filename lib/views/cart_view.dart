@@ -4,11 +4,15 @@ import '../models/product.dart';
 import '../models/cart_item.dart';
 import '../models/cart_model.dart';
 
-class CartScreen extends StatelessWidget {
+class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
 
-  double get totalCartPrice =>
-      CartModel().items.fold(0, (sum, item) => sum + item.totalPrice);
+  @override
+  State<CartScreen> createState() => _CartScreenState();
+}
+
+class _CartScreenState extends State<CartScreen> {
+  double get totalCartPrice => CartModel().getTotalPrice();
 
   void _showCartItemDetails(BuildContext context, CartItem item) {
     showModalBottomSheet(
@@ -49,6 +53,10 @@ class CartScreen extends StatelessWidget {
                 style: const TextStyle(fontSize: 16),
               ),
               Text(
+                'Stock disponible: ${item.product.stock}',
+                style: const TextStyle(fontSize: 16, color: Colors.redAccent),
+              ),
+              Text(
                 'Tamaño: ${item.size ?? 'Normal'}',
                 style: const TextStyle(fontSize: 16),
               ),
@@ -84,6 +92,12 @@ class CartScreen extends StatelessWidget {
     );
   }
 
+  void _removeCartItem(int index) {
+    setState(() {
+      CartModel().removeItemAt(index);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final cartItems = CartModel().items;
@@ -107,32 +121,65 @@ class CartScreen extends StatelessWidget {
                 separatorBuilder: (_, __) => const SizedBox(height: 12),
                 itemBuilder: (context, index) {
                   final item = cartItems[index];
-                  return Card(
-                    elevation: 3,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                  return Dismissible(
+                    key: Key(item.hashCode.toString()),
+                    direction: DismissDirection.endToStart,
+                    background: Container(
+                      alignment: Alignment.centerRight,
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      color: Colors.red,
+                      child: const Icon(Icons.delete, color: Colors.white),
                     ),
-                    child: ListTile(
-                      onTap: () => _showCartItemDetails(context, item),
-                      leading: ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-                        child: Image.asset(
-                          item.product.imagePath,
-                          width: 60,
-                          height: 60,
-                          fit: BoxFit.cover,
+                    onDismissed: (_) => _removeCartItem(index),
+                    child: Card(
+                      elevation: 3,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: ListTile(
+                        onTap: () => _showCartItemDetails(context, item),
+                        leading: ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: Image.asset(
+                            item.product.imagePath,
+                            width: 60,
+                            height: 60,
+                            fit: BoxFit.cover,
+                          ),
                         ),
-                      ),
-                      title: Text(
-                        '${item.product.name} x${item.quantity}',
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      subtitle: Text(
-                        'Tamaño: ${item.size ?? 'Normal'}\nToppings: ${item.toppings.isNotEmpty ? item.toppings.join(', ') : 'Ninguno'}',
-                      ),
-                      trailing: Text(
-                        'CLP ${item.totalPrice.toStringAsFixed(2)}',
-                        style: const TextStyle(fontWeight: FontWeight.bold),
+                        title: Text(
+                          '${item.product.name} x${item.quantity}',
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        subtitle: Text(
+                          'Tamaño: ${item.size ?? 'Normal'}\n'
+                          'Toppings: ${item.toppings.isNotEmpty ? item.toppings.join(', ') : 'Ninguno'}\n'
+                          'Stock: ${item.product.stock}',
+                        ),
+                        trailing: SizedBox(
+                          width: 100,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'CLP ${item.totalPrice.toStringAsFixed(2)}',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Flexible(
+                                child: IconButton(
+                                  icon: const Icon(
+                                    Icons.delete,
+                                    color: Colors.red,
+                                  ),
+                                  onPressed: () => _removeCartItem(index),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                     ),
                   );

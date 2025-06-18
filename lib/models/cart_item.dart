@@ -2,7 +2,7 @@ import 'product.dart';
 
 class CartItem {
   final Product product;
-  final int quantity;
+  int quantity; // Modificado: ya no es final para permitir aumentar cantidad
   final String? size;
   final List<String> toppings;
 
@@ -12,6 +12,25 @@ class CartItem {
     this.size,
     this.toppings = const [],
   });
+
+  // Método para crear un CartItem vacío
+  static CartItem empty() {
+    return CartItem(
+      product: Product(
+        name: '',
+        category: '',
+        ingredients: [],
+        price: 0,
+        imagePath: '',
+        isAvailable: false,
+        stock: 0,
+      ),
+      quantity: 0,
+    );
+  }
+
+  // Para verificar si está vacío
+  bool get isEmpty => quantity == 0 || product.name.isEmpty;
 
   double get totalPrice {
     double price = product.price * quantity;

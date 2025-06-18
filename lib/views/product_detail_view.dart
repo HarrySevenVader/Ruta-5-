@@ -201,9 +201,23 @@ class _ProductDetailViewState extends State<ProductDetailView> {
                                 ),
                                 IconButton(
                                   onPressed: () {
-                                    setState(() {
-                                      quantity++;
-                                    });
+                                    final cartQuantity = CartModel()
+                                        .getQuantity(widget.product);
+                                    if (quantity + cartQuantity <
+                                        widget.product.stock) {
+                                      setState(() {
+                                        quantity++;
+                                      });
+                                    } else {
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        const SnackBar(
+                                          content: Text('Stock insuficiente.'),
+                                          backgroundColor: Colors.red,
+                                        ),
+                                      );
+                                    }
                                   },
                                   icon: const Icon(Icons.add_circle),
                                   color: const Color(0xFF14532D),
@@ -316,6 +330,25 @@ class _ProductDetailViewState extends State<ProductDetailView> {
                             // Botón de agregar al carrito
                             ElevatedButton.icon(
                               onPressed: () {
+                                final existingQuantity = CartModel()
+                                    .getQuantity(widget.product);
+                                final totalRequested =
+                                    existingQuantity + quantity;
+
+                                if (totalRequested > widget.product.stock) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text(
+                                        'No puedes agregar más unidades. Stock máximo alcanzado.',
+                                      ),
+                                      backgroundColor: Colors.red,
+                                      behavior: SnackBarBehavior.floating,
+                                    ),
+                                  );
+                                  return;
+                                }
+
+                                // Agregar al carrito
                                 CartModel().add(
                                   CartItem(
                                     product: widget.product,
@@ -328,6 +361,7 @@ class _ProductDetailViewState extends State<ProductDetailView> {
                                             .toList(),
                                   ),
                                 );
+
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text(
