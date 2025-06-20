@@ -4,7 +4,7 @@ class Product {
   final List<String> ingredients;
   final double price;
   final String imagePath;
-  final bool isAvailable;
+  bool isAvailable;
   int stock;
 
   Product({

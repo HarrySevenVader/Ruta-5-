@@ -61,4 +61,14 @@ class CartModel {
   double getTotalPrice() {
     return _items.fold(0, (sum, item) => sum + item.totalPrice);
   }
+
+  void reduceStockAfterPayment() {
+    for (var item in _items) {
+      item.product.stock -= item.quantity;
+      if (item.product.stock < 0) {
+        item.product.stock = 0;
+      }
+    }
+    _items.clear();
+  }
 }

@@ -234,15 +234,20 @@ class ProductList extends StatelessWidget {
       itemCount: products.length,
       itemBuilder: (context, index) {
         final p = products[index];
+
+        // Verifica automáticamente si el producto está disponible según su stock
+        final isAvailable = p.stock > 0;
+        p.isAvailable = isAvailable;
+
         return Card(
-          color: p.isAvailable ? const Color(0xFF14532D) : Colors.grey[700],
+          color: isAvailable ? const Color(0xFF14532D) : Colors.grey[700],
           elevation: 2,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
           child: InkWell(
             onTap:
-                p.isAvailable
+                isAvailable
                     ? () {
                       Navigator.push(
                         context,
@@ -262,7 +267,7 @@ class ProductList extends StatelessWidget {
                       borderRadius: BorderRadius.circular(8),
                       child: ColorFiltered(
                         colorFilter: ColorFilter.mode(
-                          p.isAvailable ? Colors.transparent : Colors.grey,
+                          isAvailable ? Colors.transparent : Colors.grey,
                           BlendMode.saturation,
                         ),
                         child: Image.asset(
@@ -280,7 +285,7 @@ class ProductList extends StatelessWidget {
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
                       decoration:
-                          p.isAvailable ? null : TextDecoration.lineThrough,
+                          isAvailable ? null : TextDecoration.lineThrough,
                     ),
                   ),
                   subtitle: Text(
@@ -289,14 +294,14 @@ class ProductList extends StatelessWidget {
                   ),
                   isThreeLine: true,
                   trailing:
-                      p.isAvailable
+                      isAvailable
                           ? const Icon(
                             Icons.arrow_forward_ios,
                             color: Colors.white,
                           )
                           : null,
                 ),
-                if (!p.isAvailable)
+                if (!isAvailable)
                   Positioned.fill(
                     child: Container(
                       color: Colors.black.withOpacity(0.3),

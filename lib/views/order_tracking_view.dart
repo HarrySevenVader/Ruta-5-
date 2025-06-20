@@ -1,6 +1,7 @@
 // order_tracking_view.dart
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'menu_screen.dart';
 
 class OrderTrackingView extends StatefulWidget {
   const OrderTrackingView({super.key});
@@ -18,6 +19,7 @@ class _OrderTrackingViewState extends State<OrderTrackingView> {
     'Entregado',
   ];
   int _currentIndex = 0;
+  bool _hasScheduledNavigation = false;
 
   @override
   void initState() {
@@ -55,6 +57,18 @@ class _OrderTrackingViewState extends State<OrderTrackingView> {
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return const Center(child: CircularProgressIndicator());
+          }
+
+          // Detecta si el estado es "Entregado" y navega después de 5 segundos
+          if (snapshot.data == 'Entregado' && !_hasScheduledNavigation) {
+            _hasScheduledNavigation = true;
+            Future.delayed(const Duration(seconds: 5), () {
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (_) => const MenuScreen()),
+                (route) => false,
+              );
+            });
           }
 
           return Center(

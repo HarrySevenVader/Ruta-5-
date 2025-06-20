@@ -1,6 +1,7 @@
 // SimulatedPaymentView.dart
 import 'package:flutter/material.dart';
 import 'order_tracking_view.dart';
+import '../models/cart_model.dart';
 
 class SimulatedPaymentView extends StatefulWidget {
   const SimulatedPaymentView({super.key});
@@ -13,6 +14,10 @@ class _SimulatedPaymentViewState extends State<SimulatedPaymentView> {
   @override
   void initState() {
     super.initState();
+
+    // Reducir stock
+    CartModel().reduceStockAfterPayment();
+
     Future.delayed(const Duration(seconds: 3), () {
       Navigator.pushReplacement(
         context,
