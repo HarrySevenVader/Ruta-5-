@@ -1,8 +1,8 @@
-import 'package:app_client/views/order_mode_view.dart';
+import 'package:app_client/presentation/screens/order_mode_view.dart';
 import 'package:flutter/material.dart';
-import '../models/product.dart';
-import '../models/cart_item.dart';
-import '../models/cart_model.dart';
+import '../../data/models/product.dart';
+import '../../data/models/cart_item.dart';
+import '../../data/models/cart_model.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});

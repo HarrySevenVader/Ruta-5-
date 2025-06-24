@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
+import 'config/firebase_options.dart';
 
-import 'views/welcome_view.dart';
-import 'views/login_view.dart';
-import 'views/register_view.dart';
-import 'views/success_view.dart';
-import 'views/order_mode_view.dart';
+import 'presentation/screens/welcome_view.dart';
+import 'presentation/screens/login_view.dart';
+import 'presentation/screens/register_view.dart';
+import 'presentation/screens/success_view.dart';
+import 'presentation/screens/order_mode_view.dart';
 //import 'views/home_view.dart';
 //import 'views/menu_screen.dart';
 

@@ -1,7 +1,7 @@
 // SimulatedPaymentView.dart
 import 'package:flutter/material.dart';
 import 'order_tracking_view.dart';
-import '../models/cart_model.dart';
+import '../../data/models/cart_model.dart';
 
 class SimulatedPaymentView extends StatefulWidget {
   const SimulatedPaymentView({super.key});

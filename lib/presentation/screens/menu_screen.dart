@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'product_detail_view.dart';
 import 'cart_view.dart';
-import '../models/product.dart';
-import '../models/cart_model.dart';
+import '../../data/models/product.dart';
+import '../../data/models/cart_model.dart';
 
 // Lista de productos (precios en pesos chilenos CLP)
 final List<Product> products = [

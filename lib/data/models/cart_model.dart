@@ -1,5 +1,4 @@
 import 'cart_item.dart';
-import 'product.dart';
 
 class CartModel {
   static final CartModel _instance = CartModel._internal();
@@ -36,39 +35,26 @@ class CartModel {
   }
 
   // Comparar listas sin importar orden
-  bool _listsEqual(List<String> a, List<String> b) {
-    return Set<String>.from(a).containsAll(b) &&
-        Set<String>.from(b).containsAll(a);
-  }
-
-  // Obtener cantidad total de un producto (independiente del tamaño/toppings)
-  int getQuantity(Product product) {
-    return _items
-        .where((item) => item.product.name == product.name)
-        .fold(0, (sum, item) => sum + item.quantity);
-  }
-
-  void clear() {
-    _items.clear();
-  }
-
-  void removeItemAt(int index) {
-    _items.removeAt(index);
-  }
-
-  bool get isEmpty => _items.isEmpty;
-
-  double getTotalPrice() {
-    return _items.fold(0, (sum, item) => sum + item.totalPrice);
-  }
-
-  void reduceStockAfterPayment() {
-    for (var item in _items) {
-      item.product.stock -= item.quantity;
-      if (item.product.stock < 0) {
-        item.product.stock = 0;
-      }
+  bool _listsEqual(List<String> list1, List<String> list2) {
+    if (list1.length != list2.length) return false;
+    for (var item in list1) {
+      if (!list2.contains(item)) return false;
     }
-    _items.clear();
+    return true;
+  }
+
+  // Métodos de serialización y deserialización
+  Map<String, dynamic> toJson() {
+    return {'items': _items.map((item) => item.toJson()).toList()};
+  }
+
+  factory CartModel.fromJson(Map<String, dynamic> json) {
+    final cartModel = CartModel();
+    if (json['items'] != null) {
+      cartModel._items.addAll(
+        (json['items'] as List).map((item) => CartItem.fromJson(item)).toList(),
+      );
+    }
+    return cartModel;
   }
 }

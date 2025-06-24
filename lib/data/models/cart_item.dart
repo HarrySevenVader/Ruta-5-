@@ -15,18 +15,7 @@ class CartItem {
 
   // Método para crear un CartItem vacío
   static CartItem empty() {
-    return CartItem(
-      product: Product(
-        name: '',
-        category: '',
-        ingredients: [],
-        price: 0,
-        imagePath: '',
-        isAvailable: false,
-        stock: 0,
-      ),
-      quantity: 0,
-    );
+    return CartItem(product: Product.empty(), quantity: 0);
   }
 
   // Para verificar si está vacío
@@ -43,22 +32,33 @@ class CartItem {
     for (final t in toppings) {
       switch (t) {
         case 'Queso extra':
-          toppingsCost += 1500;
+          toppingsCost += 0.5;
           break;
-        case 'Tocino':
-          toppingsCost += 2000;
+        case 'Salsa extra':
+          toppingsCost += 0.3;
           break;
-        case 'Champiñones':
-          toppingsCost += 1000;
-          break;
-        case 'Palta':
-          toppingsCost += 1500;
-          break;
-        case 'Huevo frito':
-          toppingsCost += 2000;
-          break;
+        // Puedes agregar más casos si lo deseas
       }
     }
-    return price + (toppingsCost * quantity);
+    return price + toppingsCost;
+  }
+
+  // Serialización y deserialización
+  factory CartItem.fromJson(Map<String, dynamic> json) {
+    return CartItem(
+      product: Product.fromJson(json['product']),
+      quantity: json['quantity'],
+      size: json['size'],
+      toppings: List<String>.from(json['toppings'] ?? []),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'product': product.toJson(),
+      'quantity': quantity,
+      'size': size,
+      'toppings': toppings,
+    };
   }
 }
