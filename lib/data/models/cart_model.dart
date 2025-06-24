@@ -1,4 +1,5 @@
 import 'cart_item.dart';
+import 'product.dart';
 
 class CartModel {
   static final CartModel _instance = CartModel._internal();
@@ -10,7 +11,6 @@ class CartModel {
   List<CartItem> get items => List.unmodifiable(_items);
 
   bool add(CartItem item) {
-    // Buscar si el producto con mismos detalles ya existe
     final existing = _items.firstWhere(
       (i) =>
           i.product.name == item.product.name &&
@@ -34,7 +34,6 @@ class CartModel {
     return true;
   }
 
-  // Comparar listas sin importar orden
   bool _listsEqual(List<String> list1, List<String> list2) {
     if (list1.length != list2.length) return false;
     for (var item in list1) {
@@ -43,7 +42,32 @@ class CartModel {
     return true;
   }
 
-  // Métodos de serialización y deserialización
+  void reduceStockAfterPayment() {
+    for (var item in _items) {
+      item.product.stock -= item.quantity;
+    }
+  }
+
+  int getQuantity(Product product) {
+    final existing = _items.firstWhere(
+      (item) => item.product.name == product.name,
+      orElse: () => CartItem.empty(),
+    );
+    return existing.isEmpty ? 0 : existing.quantity;
+  }
+
+  double getTotalPrice() {
+    double total = 0.0;
+    for (var item in _items) {
+      total += item.totalPrice;
+    }
+    return total;
+  }
+
+  void removeItemAt(int index) {
+    _items.removeAt(index);
+  }
+
   Map<String, dynamic> toJson() {
     return {'items': _items.map((item) => item.toJson()).toList()};
   }
