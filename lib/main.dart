@@ -1,23 +1,48 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'config/firebase_options.dart';
+import 'package:provider/provider.dart';
 
-import 'presentation/screens/welcome_view.dart';
-import 'presentation/screens/login_view.dart';
-import 'presentation/screens/register_view.dart';
-import 'presentation/screens/success_view.dart';
-import 'presentation/screens/order_mode_view.dart';
-//import 'views/home_view.dart';
-//import 'views/menu_screen.dart';
+import 'firebase_options.dart';
 
-// Funcion principal
+import 'features/auth/data/repositories/firebase_auth_repository.dart';
+import 'features/auth/domain/usecases/sign_in_with_google.dart';
+import 'features/auth/domain/usecases/sign_in_with_email_password.dart';
+import 'features/auth/domain/usecases/register_with_email_password.dart';
+
+import 'features/auth/presentation/viewmodels/login_viewmodel.dart';
+import 'features/auth/presentation/viewmodels/register_viewmodel.dart';
+
+import 'features/auth/presentation/pages/login_view.dart';
+import 'features/auth/presentation/pages/register_view.dart';
+import 'features/home/presentation/pages/home_view.dart';
+
+
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized(); // Se asegura que los widgets estén correctamente enlazados antes de ejecutar codigo
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
-  ); // Se inicializa Firebase con las opciones correctas para la plataforma
+  );
 
-  runApp(const MyApp()); // Se inicia la app con el widget raíz MyApp
+  final authRepository = FirebaseAuthRepository();
+
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => LoginViewModel(
+            signInWithGoogle: SignInWithGoogle(authRepository),
+            signInWithEmailPassword: SignInWithEmailPassword(authRepository),
+          ),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => RegisterViewModel(
+            RegisterWithEmailPassword(authRepository),
+          ),
+        ),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -26,39 +51,20 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Foodtem', // Nombre de la app
-      debugShowCheckedModeBanner:
-          false, // Se oculta el banner de "debug" de la esquina superior
+      title: 'Flutter Auth Clean Architecture',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch:
-            Colors.indigo, // Color principal (para AppBar, botones, etc.)
-        scaffoldBackgroundColor: Colors.white, // Fondo blanco por defecto
-        // Estilo global para los botones elevados (ElevatedButton)
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 20),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
-        ),
-
-        // Estilo para los campos de texto (TextFormField)
-        inputDecorationTheme: InputDecorationTheme(
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-        ),
+        useMaterial3: true,
+        colorSchemeSeed: Colors.deepPurple,
       ),
-      initialRoute: '/', // Ruta que se carga primero al iniciar la app
-      // Mapa de rutas que definen a qué widget corresponde cada ruta
+      initialRoute: '/',
       routes: {
-        '/': (context) => WelcomeView(), // Pantalla de bienvenida
-        '/login': (context) => const LoginView(), // Pantalla de login
-        '/register': (context) => const RegisterView(), // Pantalla de registro
-        '/success': (context) => const SuccessView(), // Pantalla de éxito
-        '/order':
-            (context) => const OrderModeView(), // Pantalla modalidad pedido
-        //'/home': (context) => const HomeView(), // Pantalla principal
+        '/': (context) => const LoginView(),
+        '/register': (context) => const RegisterView(),
+        '/home': (context) => const HomeView(),
+        // '/welcome': (context) => const WelcomeView(), // si tenés una
       },
     );
   }
 }
+
