@@ -6,6 +6,7 @@ abstract class AuthRepository {
   Future<UserEntity?> registerWithEmailPassword(String email, String password);
   Future<void> signOut();
   Stream<UserEntity?> get userChanges;
+  Future<String?> getIdToken();
 }
 
 

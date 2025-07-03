@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart' as fb;
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flutter/foundation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../domain/entities/user_entity.dart';
 import '../../domain/repositories/auth_repository.dart';
@@ -11,8 +13,8 @@ class FirebaseAuthRepository implements AuthRepository {
   FirebaseAuthRepository({
     fb.FirebaseAuth? firebaseAuth,
     GoogleSignIn? googleSignIn,
-  })  : _firebaseAuth = firebaseAuth ?? fb.FirebaseAuth.instance,
-        _googleSignIn = googleSignIn ?? GoogleSignIn();
+  }) : _firebaseAuth = firebaseAuth ?? fb.FirebaseAuth.instance,
+       _googleSignIn = googleSignIn ?? GoogleSignIn();
 
   @override
   Future<UserEntity?> signInWithGoogle() async {
@@ -21,12 +23,19 @@ class FirebaseAuthRepository implements AuthRepository {
       if (googleUser == null) return null;
 
       final googleAuth = await googleUser.authentication;
+      final prefs = await SharedPreferences.getInstance();
+      prefs.setString('jwt', googleAuth.idToken ?? '');
+
+      debugPrint("TOKEN DIRECTO DE GOOGLE:");
+      debugPrint(googleAuth.idToken ?? 'sin token');
       final credential = fb.GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
 
-      final userCredential = await _firebaseAuth.signInWithCredential(credential);
+      final userCredential = await _firebaseAuth.signInWithCredential(
+        credential,
+      );
       final user = userCredential.user;
       if (user == null) return null;
 
@@ -37,9 +46,15 @@ class FirebaseAuthRepository implements AuthRepository {
   }
 
   @override
-  Future<UserEntity?> signInWithEmailPassword(String email, String password) async {
+  Future<UserEntity?> signInWithEmailPassword(
+    String email,
+    String password,
+  ) async {
     try {
-      final userCredential = await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
+      final userCredential = await _firebaseAuth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
       return _mapFirebaseUserToEntity(userCredential.user);
     } catch (_) {
       return null;
@@ -47,9 +62,15 @@ class FirebaseAuthRepository implements AuthRepository {
   }
 
   @override
-  Future<UserEntity?> registerWithEmailPassword(String email, String password) async {
+  Future<UserEntity?> registerWithEmailPassword(
+    String email,
+    String password,
+  ) async {
     try {
-      final userCredential = await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
+      final userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
       return _mapFirebaseUserToEntity(userCredential.user);
     } catch (_) {
       return null;
@@ -65,6 +86,13 @@ class FirebaseAuthRepository implements AuthRepository {
   @override
   Stream<UserEntity?> get userChanges {
     return _firebaseAuth.userChanges().map(_mapFirebaseUserToEntity);
+  }
+
+  @override
+  Future<String?> getIdToken() async {
+    final user = _firebaseAuth.currentUser;
+    if (user == null) return null;
+    return await user.getIdToken();
   }
 
   UserEntity? _mapFirebaseUserToEntity(fb.User? user) {
