@@ -38,7 +38,8 @@ class _LoginViewState extends State<LoginView> {
               TextFormField(
                 controller: _emailController,
                 decoration: const InputDecoration(labelText: 'Correo'),
-                validator: (value) => value!.isEmpty ? 'Ingrese su correo' : null,
+                validator:
+                    (value) => value!.isEmpty ? 'Ingrese su correo' : null,
               ),
               TextFormField(
                 controller: _passwordController,
@@ -46,11 +47,19 @@ class _LoginViewState extends State<LoginView> {
                 decoration: InputDecoration(
                   labelText: 'Contraseña',
                   suffixIcon: IconButton(
-                    icon: Icon(_obscurePassword ? Icons.visibility : Icons.visibility_off),
-                    onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+                    icon: Icon(
+                      _obscurePassword
+                          ? Icons.visibility
+                          : Icons.visibility_off,
+                    ),
+                    onPressed:
+                        () => setState(
+                          () => _obscurePassword = !_obscurePassword,
+                        ),
                   ),
                 ),
-                validator: (value) => value!.isEmpty ? 'Ingrese su contraseña' : null,
+                validator:
+                    (value) => value!.isEmpty ? 'Ingrese su contraseña' : null,
               ),
               const SizedBox(height: 20),
               if (viewModel.isLoading)
@@ -81,13 +90,14 @@ class _LoginViewState extends State<LoginView> {
                   },
                 ),
                 TextButton(
-                  onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => const RegisterView()),
-                  ),
-                  child: const Text('¿No tenés cuenta? Registrate'),
+                  onPressed:
+                      () => Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const RegisterView()),
+                      ),
+                  child: const Text('¿No tienes cuenta? Registrate'),
                 ),
-              ]
+              ],
             ],
           ),
         ),

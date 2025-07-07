@@ -37,7 +37,8 @@ class _RegisterViewState extends State<RegisterView> {
               TextFormField(
                 controller: _emailController,
                 decoration: const InputDecoration(labelText: 'Correo'),
-                validator: (value) => value!.isEmpty ? 'Ingrese su correo' : null,
+                validator:
+                    (value) => value!.isEmpty ? 'Ingrese su correo' : null,
               ),
               TextFormField(
                 controller: _passwordController,
@@ -45,11 +46,19 @@ class _RegisterViewState extends State<RegisterView> {
                 decoration: InputDecoration(
                   labelText: 'Contraseña',
                   suffixIcon: IconButton(
-                    icon: Icon(_obscurePassword ? Icons.visibility : Icons.visibility_off),
-                    onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+                    icon: Icon(
+                      _obscurePassword
+                          ? Icons.visibility
+                          : Icons.visibility_off,
+                    ),
+                    onPressed:
+                        () => setState(
+                          () => _obscurePassword = !_obscurePassword,
+                        ),
                   ),
                 ),
-                validator: (value) => value!.length < 6 ? 'Mínimo 6 caracteres' : null,
+                validator:
+                    (value) => value!.length < 6 ? 'Mínimo 6 caracteres' : null,
               ),
               const SizedBox(height: 20),
               if (viewModel.isLoading)
@@ -70,11 +79,12 @@ class _RegisterViewState extends State<RegisterView> {
                   child: const Text('Registrarse'),
                 ),
               TextButton(
-                onPressed: () => Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (_) => const LoginView()),
-                ),
-                child: const Text('¿Ya tenés cuenta? Iniciá sesión'),
+                onPressed:
+                    () => Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (_) => const LoginView()),
+                    ),
+                child: const Text('¿Ya tienes cuenta? Inicia sesión'),
               ),
             ],
           ),
