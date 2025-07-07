@@ -4,8 +4,12 @@ import 'drink_entity.dart';
 
 class MenuEntity {
   final CategoryEntity category;
-  final DishEntity dish;
-  final DrinkEntity drink;
+  final List<DishEntity> dishes;
+  final List<DrinkEntity> drinks;
 
-  MenuEntity({required this.category, required this.dish, required this.drink});
+  MenuEntity({
+    required this.category,
+    required this.dishes,
+    required this.drinks,
+  });
 }

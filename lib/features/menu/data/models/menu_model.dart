@@ -10,15 +10,23 @@ import 'drink_model.dart';
 class MenuModel extends MenuEntity {
   MenuModel({
     required super.category,
-    required super.dish,
-    required super.drink,
+    required super.dishes,
+    required super.drinks,
   });
 
   factory MenuModel.fromJson(Map<String, dynamic> json) {
     return MenuModel(
       category: CategoryModel.fromJson(json['category']),
-      dish: DishModel.fromJson(json['dishes']),
-      drink: DrinkModel.fromJson(json['drinks']),
+      dishes:
+          (json['dishes'] as List<dynamic>?)
+              ?.map((dish) => DishModel.fromJson(dish))
+              .toList() ??
+          [],
+      drinks:
+          (json['drinks'] as List<dynamic>?)
+              ?.map((drink) => DrinkModel.fromJson(drink))
+              .toList() ??
+          [],
     );
   }
 }

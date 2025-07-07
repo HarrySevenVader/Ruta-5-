@@ -11,14 +11,18 @@ class MenuApiDatasource {
     final prefs = await SharedPreferences.getInstance();
     final jwt = prefs.getString('jwt');
 
+    print('JWT Token: $jwt'); // Debug print
+
     final url = Uri.parse('$_baseUrl/v1/menu/today');
+    print('Llamando a: $url'); // Debug print
+
     final response = await http.get(
       url,
-      headers: {
-        'accept': 'application/json',
-        'Authorization': 'Bearer $jwt',
-      },
+      headers: {'accept': 'application/json', 'Authorization': 'Bearer $jwt'},
     );
+
+    print('Status Code: ${response.statusCode}'); // Debug print
+    print('Response Body: ${response.body}'); // Debug print
 
     if (response.statusCode == 200) {
       final List<dynamic> jsonList = jsonDecode(response.body);
