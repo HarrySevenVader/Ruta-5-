@@ -16,12 +16,28 @@ class RatingView extends StatefulWidget {
 class _RatingViewState extends State<RatingView> {
   final TextEditingController _commentController = TextEditingController();
 
+  void _resetForm() {
+    _commentController.clear();
+    final viewModel = Provider.of<RatingViewModel>(context, listen: false);
+    viewModel.reset();
+  }
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final viewModel = Provider.of<RatingViewModel>(context, listen: false);
+      // Limpiar completamente el formulario
+      _resetForm();
+      // Establecer el nuevo producto (esto resetea todo el estado)
       viewModel.setItem(widget.item);
+      
+      // Sincronizar el controller con los cambios del ViewModel
+      _commentController.addListener(() {
+        if (!viewModel.isSubmitted) { // Solo actualizar si no se ha enviado
+          viewModel.setComment(_commentController.text);
+        }
+      });
     });
   }
 
@@ -206,7 +222,7 @@ class _RatingViewState extends State<RatingView> {
                           filled: true,
                           fillColor: Colors.grey[50],
                         ),
-                        onChanged: viewModel.setComment,
+                        // Remover onChanged para evitar conflictos, usar solo el listener del controller
                       ),
 
                       const SizedBox(height: 24),

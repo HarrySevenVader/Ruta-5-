@@ -18,7 +18,14 @@ class RatingViewModel extends ChangeNotifier {
     : _submitRating = submitRating;
 
   void setItem(RateableItem rateableItem) {
+    // Resetear completamente el estado cuando se establece un nuevo producto
     item = rateableItem;
+    selectedRating = 0;
+    comment = '';
+    isLoading = false;
+    errorMessage = null;
+    isSubmitted = false;
+    print('🔄 Nuevo producto establecido: ${rateableItem.name} - Estado reseteado');
     notifyListeners();
   }
 
