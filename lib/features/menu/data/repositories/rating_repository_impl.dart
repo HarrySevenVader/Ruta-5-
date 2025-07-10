@@ -13,7 +13,7 @@ class RatingRepositoryImpl implements RatingRepository {
       print('Enviando calificación para: ${rating.dishToken}');
       print('Rating: ${rating.rating}');
       print('Comentario: ${rating.comment}');
-      
+
       final response = await http.post(
         Uri.parse('$baseUrl/rating'),
         headers: {'Content-Type': 'application/json'},

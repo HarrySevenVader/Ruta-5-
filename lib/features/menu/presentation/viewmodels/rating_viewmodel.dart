@@ -55,7 +55,8 @@ class RatingViewModel extends ChangeNotifier {
         isSubmitted = true;
         errorMessage = null;
       } else {
-        errorMessage = 'Error al enviar la valoración. Verifica tu conexión a internet.';
+        errorMessage =
+            'Error al enviar la valoración. Verifica tu conexión a internet.';
       }
     } catch (e) {
       print('Error en submitRating: $e');
