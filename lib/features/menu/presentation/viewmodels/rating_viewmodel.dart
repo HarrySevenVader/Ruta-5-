@@ -40,8 +40,10 @@ class RatingViewModel extends ChangeNotifier {
     }
 
     _setLoading(true);
+    errorMessage = null; // Limpiar errores anteriores
+
     try {
-      print('Preparando rating para: ${item!.token}');
+      print('🚀 Preparando rating para: ${item!.token}');
       final rating = RatingEntity(
         dishToken: item!.token,
         rating: selectedRating,
@@ -52,15 +54,26 @@ class RatingViewModel extends ChangeNotifier {
       final success = await _submitRating(rating);
 
       if (success) {
+        print('✅ Rating enviado exitosamente desde ViewModel');
         isSubmitted = true;
         errorMessage = null;
       } else {
+        print('❌ Fallo al enviar rating desde ViewModel');
         errorMessage =
-            'Error al enviar la valoración. Verifica tu conexión a internet.';
+            'No se pudo enviar la calificación. Verifica tu conexión.';
+      }
+    } on Exception catch (e) {
+      print('🔥 Excepción en submitRating: $e');
+      if (e.toString().contains('Timeout')) {
+        errorMessage = 'Tiempo de espera agotado. Verifica tu conexión.';
+      } else if (e.toString().contains('SocketException')) {
+        errorMessage = 'Sin conexión a internet.';
+      } else {
+        errorMessage = 'Error de conexión: ${e.toString()}';
       }
     } catch (e) {
-      print('Error en submitRating: $e');
-      errorMessage = 'Error al enviar la valoración: ${e.toString()}';
+      print('💥 Error inesperado en submitRating: $e');
+      errorMessage = 'Error inesperado: ${e.toString()}';
     }
     _setLoading(false);
   }
