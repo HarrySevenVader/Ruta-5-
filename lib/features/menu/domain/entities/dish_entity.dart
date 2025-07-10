@@ -1,4 +1,6 @@
-class DishEntity {
+import 'rateable_item.dart';
+
+class DishEntity implements RateableItem {
   final String token;
   final String img;
   final String name;
@@ -14,4 +16,7 @@ class DishEntity {
     required this.price,
     required this.rate,
   });
+
+  @override
+  String get displayInfo => description;
 }

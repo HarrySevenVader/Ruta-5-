@@ -1,4 +1,6 @@
-class DrinkEntity {
+import 'rateable_item.dart';
+
+class DrinkEntity implements RateableItem {
   final String token;
   final String img;
   final String name;
@@ -14,4 +16,10 @@ class DrinkEntity {
     required this.unit,
     required this.price,
   });
+
+  @override
+  String get displayInfo => '$volume $unit';
+
+  @override
+  double get rate => 0.0; // Las bebidas empiezan sin calificación
 }

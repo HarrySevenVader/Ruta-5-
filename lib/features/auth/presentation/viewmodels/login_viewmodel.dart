@@ -29,7 +29,11 @@ class LoginViewModel extends ChangeNotifier {
       user = await _signInWithGoogle();
       errorMessage = null;
     } catch (e) {
-      errorMessage = 'Error al iniciar sesión con Google.';
+      if (e.toString().contains('dominio @utem.cl')) {
+        errorMessage = 'Solo se permiten cuentas con dominio @utem.cl';
+      } else {
+        errorMessage = 'Error al iniciar sesión con Google.';
+      }
     }
     _setLoading(false);
   }
@@ -40,7 +44,11 @@ class LoginViewModel extends ChangeNotifier {
       user = await _signInWithEmailPassword(email, password);
       errorMessage = user == null ? 'Credenciales inválidas' : null;
     } catch (e) {
-      errorMessage = 'Error al iniciar sesión con correo.';
+      if (e.toString().contains('dominio @utem.cl')) {
+        errorMessage = 'Solo se permiten cuentas con dominio @utem.cl';
+      } else {
+        errorMessage = 'Error al iniciar sesión con correo.';
+      }
     }
     _setLoading(false);
   }

@@ -22,6 +22,12 @@ class FirebaseAuthRepository implements AuthRepository {
       final googleUser = await _googleSignIn.signIn();
       if (googleUser == null) return null;
 
+      // Validar dominio @utem.cl
+      if (!_isValidUtemEmail(googleUser.email)) {
+        await _googleSignIn.signOut();
+        throw Exception('Solo se permiten cuentas con dominio @utem.cl');
+      }
+
       final googleAuth = await googleUser.authentication;
       final prefs = await SharedPreferences.getInstance();
       prefs.setString('jwt', googleAuth.idToken ?? '');
@@ -51,6 +57,11 @@ class FirebaseAuthRepository implements AuthRepository {
     String password,
   ) async {
     try {
+      // Validar dominio @utem.cl
+      if (!_isValidUtemEmail(email)) {
+        throw Exception('Solo se permiten cuentas con dominio @utem.cl');
+      }
+
       final userCredential = await _firebaseAuth.signInWithEmailAndPassword(
         email: email,
         password: password,
@@ -67,6 +78,11 @@ class FirebaseAuthRepository implements AuthRepository {
     String password,
   ) async {
     try {
+      // Validar dominio @utem.cl
+      if (!_isValidUtemEmail(email)) {
+        throw Exception('Solo se permiten cuentas con dominio @utem.cl');
+      }
+
       final userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
         email: email,
         password: password,
@@ -103,5 +119,9 @@ class FirebaseAuthRepository implements AuthRepository {
       displayName: user.displayName,
       photoUrl: user.photoURL,
     );
+  }
+
+  bool _isValidUtemEmail(String email) {
+    return email.toLowerCase().endsWith('@utem.cl');
   }
 }

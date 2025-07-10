@@ -11,12 +11,16 @@ import '../../features/auth/presentation/viewmodels/register_viewmodel.dart';
 
 import '../../features/menu/data/datasources/menu_api_datasource.dart';
 import '../../features/menu/data/repositories/menu_repository_impl.dart';
+import '../../features/menu/data/repositories/rating_repository_impl.dart';
 import '../../features/menu/domain/usecases/get_today_menu.dart';
+import '../../features/menu/domain/usecases/submit_rating.dart';
 import '../../features/menu/presentation/viewmodels/menu_viewmodel.dart';
+import '../../features/menu/presentation/viewmodels/rating_viewmodel.dart';
 
 List<SingleChildWidget> appProviders() {
   final authRepository = FirebaseAuthRepository();
   final menuRepository = MenuRepositoryImpl(MenuApiDatasource());
+  final ratingRepository = RatingRepositoryImpl();
 
   return [
     ChangeNotifierProvider(
@@ -33,6 +37,10 @@ List<SingleChildWidget> appProviders() {
     ),
     ChangeNotifierProvider(
       create: (_) => MenuViewModel(GetTodayMenu(menuRepository)),
+    ),
+    ChangeNotifierProvider(
+      create:
+          (_) => RatingViewModel(submitRating: SubmitRating(ratingRepository)),
     ),
   ];
 }
