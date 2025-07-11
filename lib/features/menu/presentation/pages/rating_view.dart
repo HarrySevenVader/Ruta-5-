@@ -31,10 +31,11 @@ class _RatingViewState extends State<RatingView> {
       _resetForm();
       // Establecer el nuevo producto (esto resetea todo el estado)
       viewModel.setItem(widget.item);
-      
+
       // Sincronizar el controller con los cambios del ViewModel
       _commentController.addListener(() {
-        if (!viewModel.isSubmitted) { // Solo actualizar si no se ha enviado
+        if (!viewModel.isSubmitted) {
+          // Solo actualizar si no se ha enviado
           viewModel.setComment(_commentController.text);
         }
       });
@@ -49,313 +50,324 @@ class _RatingViewState extends State<RatingView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey[100],
-      appBar: AppBar(
-        title: const Text('Valorar Plato'),
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
-        elevation: 0,
-      ),
-      body: Consumer<RatingViewModel>(
-        builder: (context, viewModel, _) {
-          if (viewModel.isSubmitted) {
-            return _buildSuccessView(context);
-          }
+    final screenSize = MediaQuery.of(context).size;
+    final accentGreen = Colors.green.shade200;
 
-          return SingleChildScrollView(
-            child: Column(
-              children: [
-                // Imagen y nombre del plato
-                Container(
-                  width: double.infinity,
-                  color: Colors.white,
-                  padding: const EdgeInsets.all(32.0),
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Stack(
+        children: [
+          // Fondo gris con gradiente de gris oscuro intenso a blanco, sin border radius
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            height: screenSize.height * 0.22,
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.center,
+                  colors: [
+                    Colors.grey.shade900, // Gris muy oscuro, casi negro
+                    Colors.grey.shade700, // Gris oscuro
+                    Colors.grey.shade400, // Gris medio
+                    Colors.grey.shade100, // Gris muy claro
+                    Colors.white, // Blanco puro
+                  ],
+                  stops: [0.0, 0.25, 0.5, 0.8, 1.0],
+                ),
+              ),
+            ),
+          ),
+
+          // AppBar transparente con título
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16.0,
+                  vertical: 8.0,
+                ),
+                child: Row(
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.arrow_back, color: Colors.black),
+                      onPressed: () => Navigator.of(context).pop(),
+                    ),
+                    Expanded(
+                      child: Text(
+                        'Valorar Producto',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    SizedBox(width: 48), // Para mantener el título centrado
+                  ],
+                ),
+              ),
+            ),
+          ),
+
+          // Contenido principal con Consumer
+          Positioned(
+            top: screenSize.height * 0.12, // Debajo del gradiente
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: Consumer<RatingViewModel>(
+              builder: (context, viewModel, _) {
+                if (viewModel.isSubmitted) {
+                  return _buildSuccessView(context, accentGreen);
+                }
+
+                return SingleChildScrollView(
                   child: Column(
                     children: [
-                      // Imagen del plato
+                      // Imagen y nombre del plato con nuevo estilo
                       Container(
-                        width: 200,
-                        height: 200,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(16),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.3),
-                              spreadRadius: 2,
-                              blurRadius: 8,
-                              offset: const Offset(0, 4),
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(32.0),
+                        child: Column(
+                          children: [
+                            // Imagen del plato
+                            Container(
+                              width: 180,
+                              height: 180,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(16),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.3),
+                                    spreadRadius: 2,
+                                    blurRadius: 8,
+                                    offset: const Offset(0, 4),
+                                  ),
+                                ],
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(16),
+                                child:
+                                    widget.item.img.isNotEmpty
+                                        ? Image.network(
+                                          widget.item.img,
+                                          fit: BoxFit.cover,
+                                          errorBuilder: (
+                                            context,
+                                            error,
+                                            stackTrace,
+                                          ) {
+                                            return Container(
+                                              color: Colors.grey[200],
+                                              child: Icon(
+                                                Icons.restaurant,
+                                                size: 80,
+                                                color: accentGreen,
+                                              ),
+                                            );
+                                          },
+                                        )
+                                        : Container(
+                                          color: Colors.grey[200],
+                                          child: Icon(
+                                            Icons.restaurant,
+                                            size: 80,
+                                            color: accentGreen,
+                                          ),
+                                        ),
+                              ),
+                            ),
+                            const SizedBox(height: 24),
+                            // Nombre del plato
+                            Text(
+                              widget.item.name,
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                            const SizedBox(height: 8),
+                            // Descripción o info adicional
+                            Text(
+                              widget.item.displayInfo,
+                              style: TextStyle(
+                                color: Colors.grey[600],
+                                fontSize: 16,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                            const SizedBox(height: 8),
+                            // Precio
+                            Text(
+                              '\$${widget.item.price}',
+                              style: TextStyle(
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold,
+                                color: accentGreen,
+                              ),
                             ),
                           ],
                         ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(16),
-                          child:
-                              widget.item.img.isNotEmpty
-                                  ? Image.network(
-                                    widget.item.img,
-                                    fit: BoxFit.cover,
-                                    errorBuilder: (context, error, stackTrace) {
-                                      return Container(
-                                        color: Colors.grey[200],
-                                        child: const Icon(
-                                          Icons.restaurant,
-                                          size: 80,
-                                          color: Colors.grey,
-                                        ),
-                                      );
-                                    },
-                                  )
-                                  : Container(
-                                    color: Colors.grey[200],
-                                    child: const Icon(
-                                      Icons.restaurant,
-                                      size: 80,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                        ),
                       ),
-                      const SizedBox(height: 24),
-                      // Nombre del producto
-                      Text(
-                        widget.item.name,
-                        style: const TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black87,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(height: 8),
-                      // Información del producto (descripción o volumen)
-                      Text(
-                        widget.item.displayInfo,
-                        style: TextStyle(fontSize: 16, color: Colors.grey[600]),
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(height: 16),
-                      // Precio
-                      Text(
-                        '\$${widget.item.price}',
-                        style: const TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.green,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
 
-                const SizedBox(height: 32),
+                      // Separador
+                      Container(height: 8, color: Colors.grey[100]),
 
-                // Sistema de valoración
-                Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 24),
-                  padding: const EdgeInsets.all(24),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(16),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.1),
-                        spreadRadius: 1,
-                        blurRadius: 8,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    children: [
-                      const Text(
-                        '¿Cómo calificarías este plato?',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black87,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(height: 24),
-
-                      // Estrellas de valoración
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: List.generate(5, (index) {
-                          final starNumber = index + 1;
-                          return GestureDetector(
-                            onTap: () => viewModel.setRating(starNumber),
-                            child: Container(
-                              padding: const EdgeInsets.all(4),
-                              child: Icon(
-                                starNumber <= viewModel.selectedRating
-                                    ? Icons.star
-                                    : Icons.star_border,
-                                color:
-                                    starNumber <= viewModel.selectedRating
-                                        ? Colors.amber
-                                        : Colors.grey[400],
-                                size: 40,
+                      // Sección de valoración
+                      Padding(
+                        padding: const EdgeInsets.all(24.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Center(
+                              child: Text(
+                                '¿Qué te pareció este producto?',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                textAlign: TextAlign.center,
                               ),
                             ),
-                          );
-                        }),
-                      ),
+                            const SizedBox(height: 16),
 
-                      const SizedBox(height: 32),
-
-                      // Campo de comentario
-                      TextField(
-                        controller: _commentController,
-                        maxLines: 3,
-                        decoration: InputDecoration(
-                          hintText: 'Escribe un comentario (opcional)',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide(color: Colors.grey[300]!),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: const BorderSide(color: Colors.blue),
-                          ),
-                          filled: true,
-                          fillColor: Colors.grey[50],
-                        ),
-                        // Remover onChanged para evitar conflictos, usar solo el listener del controller
-                      ),
-
-                      const SizedBox(height: 24),
-
-                      // Mensaje de error
-                      if (viewModel.errorMessage != null)
-                        Container(
-                          margin: const EdgeInsets.only(bottom: 16),
-                          padding: const EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            color: Colors.red[50],
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(color: Colors.red[200]!),
-                          ),
-                          child: Text(
-                            viewModel.errorMessage!,
-                            style: TextStyle(color: Colors.red[700]),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-
-                      // Botón de envío
-                      SizedBox(
-                        width: double.infinity,
-                        height: 50,
-                        child: ElevatedButton(
-                          onPressed:
-                              viewModel.isLoading
-                                  ? null
-                                  : () async {
-                                    viewModel.setComment(
-                                      _commentController.text,
-                                    );
-                                    await viewModel.submitRating();
-                                  },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blue,
-                            foregroundColor: Colors.white,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
+                            // Estrellas para calificación
+                            Center(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: List.generate(5, (index) {
+                                  return IconButton(
+                                    icon: Icon(
+                                      index < viewModel.selectedRating
+                                          ? Icons.star
+                                          : Icons.star_border,
+                                      size: 36,
+                                    ),
+                                    color: Colors.amber,
+                                    onPressed: () {
+                                      viewModel.setRating(index + 1);
+                                    },
+                                  );
+                                }),
+                              ),
                             ),
-                            elevation: 2,
-                          ),
-                          child:
-                              viewModel.isLoading
-                                  ? const SizedBox(
-                                    width: 20,
-                                    height: 20,
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 2,
-                                      valueColor: AlwaysStoppedAnimation<Color>(
-                                        Colors.white,
-                                      ),
-                                    ),
-                                  )
-                                  : const Text(
-                                    'Enviar Valoración',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600,
-                                    ),
+
+                            const SizedBox(height: 24),
+
+                            // Campo de comentario
+                            TextField(
+                              controller: _commentController,
+                              maxLength: 255,
+                              maxLines: 4,
+                              decoration: InputDecoration(
+                                labelText: 'Comentarios (opcional)',
+                                hintText:
+                                    'Comparte tu opinión sobre este producto',
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: BorderSide(
+                                    color: accentGreen,
+                                    width: 2,
                                   ),
+                                ),
+                              ),
+                            ),
+
+                            const SizedBox(height: 32),
+
+                            // Botón enviar con el estilo consistente
+                            SizedBox(
+                              width: double.infinity,
+                              height: 56,
+                              child: ElevatedButton(
+                                onPressed:
+                                    viewModel.selectedRating > 0
+                                        ? () {
+                                          viewModel.submitRating();
+                                        }
+                                        : null,
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.black,
+                                  foregroundColor: Colors.white,
+                                  disabledBackgroundColor: Colors.grey[300],
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
+                                child: Text(
+                                  'Enviar Valoración',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
                   ),
-                ),
-
-                const SizedBox(height: 32),
-              ],
+                );
+              },
             ),
-          );
-        },
+          ),
+        ],
       ),
     );
   }
 
-  Widget _buildSuccessView(BuildContext context) {
+  Widget _buildSuccessView(BuildContext context, Color accentGreen) {
     return Center(
-      child: Container(
-        margin: const EdgeInsets.all(24),
-        padding: const EdgeInsets.all(32),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.1),
-              spreadRadius: 1,
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
+      child: Padding(
+        padding: const EdgeInsets.all(32.0),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              width: 80,
-              height: 80,
+              height: 120,
+              width: 120,
               decoration: BoxDecoration(
-                color: Colors.green[100],
+                color: accentGreen.withOpacity(0.2),
                 shape: BoxShape.circle,
               ),
-              child: const Icon(
-                Icons.check_circle,
-                color: Colors.green,
-                size: 50,
+              child: Icon(
+                Icons.check_circle_outline,
+                size: 80,
+                color: accentGreen,
               ),
-            ),
-            const SizedBox(height: 24),
-            const Text(
-              '¡Valoración enviada!',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.black87,
-              ),
-            ),
-            const SizedBox(height: 16),
-            const Text(
-              'Gracias por tu opinión. Tu valoración ayudará a otros usuarios.',
-              style: TextStyle(fontSize: 16, color: Colors.grey),
-              textAlign: TextAlign.center,
             ),
             const SizedBox(height: 32),
+            Text(
+              '¡Gracias por tu valoración!',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'Tu opinión es muy importante para nosotros y nos ayuda a mejorar nuestros productos.',
+              style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 48),
             SizedBox(
               width: double.infinity,
-              height: 50,
+              height: 56,
               child: ElevatedButton(
-                onPressed: () => Navigator.pop(context),
+                onPressed: () => Navigator.of(context).pop(),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue,
+                  backgroundColor: Colors.black,
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -363,7 +375,7 @@ class _RatingViewState extends State<RatingView> {
                 ),
                 child: const Text(
                   'Volver al Menú',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
               ),
             ),

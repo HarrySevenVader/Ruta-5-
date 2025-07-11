@@ -28,9 +28,59 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Auth Clean Architecture',
+      title: 'Ruta 5',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(useMaterial3: true, colorSchemeSeed: Colors.deepPurple),
+      theme: ThemeData(
+        useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.black,
+          primary: Colors.black,
+          secondary: Colors.green.shade400,
+        ),
+        fontFamily: 'Roboto',
+        scaffoldBackgroundColor: Colors.white,
+        appBarTheme: const AppBarTheme(
+          elevation: 0,
+          backgroundColor: Colors.white,
+          foregroundColor: Colors.black,
+          centerTitle: true,
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.black,
+            foregroundColor: Colors.white,
+            minimumSize: Size(double.infinity, 56),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            elevation: 0,
+          ),
+        ),
+        textButtonTheme: TextButtonThemeData(
+          style: TextButton.styleFrom(foregroundColor: Colors.black87),
+        ),
+        textTheme: const TextTheme(
+          displayLarge: TextStyle(
+            fontWeight: FontWeight.w800,
+            color: Colors.black,
+          ),
+          displayMedium: TextStyle(
+            fontWeight: FontWeight.w300,
+            color: Colors.black45,
+          ),
+          headlineLarge: TextStyle(
+            fontWeight: FontWeight.w700,
+            color: Colors.black,
+            height: 1.1,
+          ),
+          titleLarge: TextStyle(
+            fontWeight: FontWeight.w600,
+            color: Colors.black,
+          ),
+          bodyLarge: TextStyle(color: Colors.black87, height: 1.5),
+          bodyMedium: TextStyle(color: Colors.black54, height: 1.5),
+        ),
+      ),
       initialRoute: '/',
       routes: {
         '/': (context) => const LoginView(),
