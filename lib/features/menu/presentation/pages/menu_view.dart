@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../viewmodels/menu_viewmodel.dart';
 import 'rating_view.dart';
@@ -27,7 +28,6 @@ class _MenuViewState extends State<MenuView> {
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
-    final isSmallDevice = screenSize.width < 600;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -72,10 +72,8 @@ class _MenuViewState extends State<MenuView> {
                 ),
                 child: Row(
                   children: [
-                    IconButton(
-                      icon: Icon(Icons.arrow_back, color: Colors.black),
-                      onPressed: () => Navigator.of(context).pop(),
-                    ),
+                    // Espacio para mantener el título centrado
+                    SizedBox(width: 48),
                     Expanded(
                       child: Text(
                         'Menú del Día',
@@ -88,8 +86,9 @@ class _MenuViewState extends State<MenuView> {
                       ),
                     ),
                     IconButton(
-                      icon: Icon(Icons.search, color: Colors.black),
-                      onPressed: () {},
+                      icon: Icon(Icons.logout, color: Colors.black),
+                      tooltip: 'Cerrar sesión',
+                      onPressed: () => _handleLogout(context),
                     ),
                   ],
                 ),
@@ -385,5 +384,45 @@ class _MenuViewState extends State<MenuView> {
         ],
       ),
     );
+  }
+
+  Future<void> _handleLogout(BuildContext context) async {
+    // Mostrar diálogo de confirmación
+    final shouldLogout = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Cerrar sesión'),
+        content: Text('¿Estás seguro de que deseas cerrar sesión?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: Text('Cancelar'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: Text('Cerrar sesión'),
+          ),
+        ],
+      ),
+    );
+
+    if (shouldLogout == true) {
+      try {
+        // Obtener SharedPreferences para limpiar el JWT
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.remove('jwt'); // Eliminar el token JWT
+        
+        // Navegar de vuelta a la pantalla de login (que está definida como ruta '/')
+        Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
+      } catch (e) {
+        print('Error al cerrar sesión: $e');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error al cerrar sesión. Intenta de nuevo.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
   }
 }

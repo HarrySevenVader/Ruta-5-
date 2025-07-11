@@ -314,7 +314,7 @@ class _RatingViewState extends State<RatingView> {
                                 ),
                               ),
                             ),
-                            
+
                             // Mensaje de error
                             if (viewModel.errorMessage != null)
                               Padding(
@@ -325,7 +325,9 @@ class _RatingViewState extends State<RatingView> {
                                   decoration: BoxDecoration(
                                     color: Colors.red.shade50,
                                     borderRadius: BorderRadius.circular(8),
-                                    border: Border.all(color: Colors.red.shade200),
+                                    border: Border.all(
+                                      color: Colors.red.shade200,
+                                    ),
                                   ),
                                   child: Text(
                                     viewModel.errorMessage!,

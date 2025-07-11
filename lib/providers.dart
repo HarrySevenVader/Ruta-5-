@@ -6,6 +6,7 @@ import '../../features/auth/domain/usecases/get_id_token.dart';
 import '../../features/auth/domain/usecases/register_with_email_password.dart';
 import '../../features/auth/domain/usecases/sign_in_with_email_password.dart';
 import '../../features/auth/domain/usecases/sign_in_with_google.dart';
+import '../../features/auth/domain/usecases/sign_out.dart';
 import '../../features/auth/presentation/viewmodels/login_viewmodel.dart';
 import '../../features/auth/presentation/viewmodels/register_viewmodel.dart';
 

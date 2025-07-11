@@ -26,7 +26,9 @@ class RatingViewModel extends ChangeNotifier {
     isLoading = false;
     errorMessage = null;
     isSubmitted = false;
-    print('🔄 Nuevo producto establecido: ${rateableItem.name} - Estado reseteado');
+    print(
+      '🔄 Nuevo producto establecido: ${rateableItem.name} - Estado reseteado',
+    );
     notifyListeners();
   }
 
@@ -46,10 +48,11 @@ class RatingViewModel extends ChangeNotifier {
       notifyListeners();
       return;
     }
-    
+
     // Verificar si el elemento es una bebida
     if (item is! DishEntity) {
-      errorMessage = 'Lo sentimos, actualmente solo se pueden calificar platos. Las bebidas estarán disponibles próximamente.';
+      errorMessage =
+          'Lo sentimos, actualmente solo se pueden calificar platos. Las bebidas estarán disponibles próximamente.';
       notifyListeners();
       return;
     }
