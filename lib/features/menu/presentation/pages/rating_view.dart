@@ -314,6 +314,29 @@ class _RatingViewState extends State<RatingView> {
                                 ),
                               ),
                             ),
+                            
+                            // Mensaje de error
+                            if (viewModel.errorMessage != null)
+                              Padding(
+                                padding: const EdgeInsets.only(top: 16.0),
+                                child: Container(
+                                  width: double.infinity,
+                                  padding: EdgeInsets.all(12),
+                                  decoration: BoxDecoration(
+                                    color: Colors.red.shade50,
+                                    borderRadius: BorderRadius.circular(8),
+                                    border: Border.all(color: Colors.red.shade200),
+                                  ),
+                                  child: Text(
+                                    viewModel.errorMessage!,
+                                    style: TextStyle(
+                                      color: Colors.red.shade800,
+                                      fontSize: 14,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              ),
                           ],
                         ),
                       ),
