@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../domain/entities/dish_entity.dart';
 import '../../domain/entities/rateable_item.dart';
 import '../../domain/entities/rating_entity.dart';
 import '../../domain/usecases/submit_rating.dart';
@@ -42,6 +43,13 @@ class RatingViewModel extends ChangeNotifier {
   Future<void> submitRating() async {
     if (item == null || selectedRating == 0) {
       errorMessage = 'Por favor selecciona una calificación';
+      notifyListeners();
+      return;
+    }
+    
+    // Verificar si el elemento es una bebida
+    if (item is! DishEntity) {
+      errorMessage = 'Lo sentimos, actualmente solo se pueden calificar platos. Las bebidas estarán disponibles próximamente.';
       notifyListeners();
       return;
     }
