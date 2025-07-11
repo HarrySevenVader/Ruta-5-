@@ -20,7 +20,7 @@ class RatingRepositoryImpl implements RatingRepository {
         print('⚠️ Intento de calificar una bebida: ${rating.dishToken}');
         return false;
       }
-      
+
       print('=== ENVIANDO EVALUACIÓN A: $endpoint ===');
       print('DishToken: ${rating.dishToken}');
       print('Rating: ${rating.rating}');
@@ -57,8 +57,9 @@ class RatingRepositoryImpl implements RatingRepository {
       print('Status code: ${response.statusCode}');
       print('Response body: ${response.body}');
 
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        print('✅ Calificación enviada exitosamente a $endpoint');
+      // Considerar códigos 2xx como éxito (200 OK, 201 Created, 202 Accepted)
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        print('✅ Calificación enviada exitosamente a $endpoint (Status: ${response.statusCode})');
         return true;
       } else {
         print('❌ Error del servidor en $endpoint: ${response.statusCode}');
